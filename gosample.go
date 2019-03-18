@@ -1,17 +1,12 @@
 package gosample
 
-import (
-	"errors"
-)
+import "fmt"
 
-type firstVal int
-type secondVal int
-
-func Div(i firstVal, j secondVal) (int, error) {
-	if j == 0 {
-		// return my error
-		return 0, errors.New("divied by zero")
+func Print(value interface{}) {
+	s, ok := value.(string) // Type Assertion
+	if ok {
+		fmt.Printf("value is string: %s\n", s)
+	} else {
+		fmt.Printf("value is not string\n")
 	}
-
-	return i / j, nil
 }
