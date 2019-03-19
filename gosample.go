@@ -2,8 +2,8 @@ package gosample
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
+	"os"
 )
 
 type Person struct {
@@ -15,25 +15,29 @@ type Person struct {
 	memo    string
 }
 
-func ToJson() {
+func Write() {
 	person := &Person{
 		ID:      1,
-		Name:    "Gopher",
+		Name:    "Writer",
 		Email:   "gopher@example.org",
 		Age:     5,
 		Address: "",
 	}
+
+	file, err := os.Create("./file.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	b, err := json.Marshal(person)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(b)) // to Json string
-
-	var personb Person
-	res := json.Unmarshal(b, &personb)
-	if res != nil {
+	_, err = file.WriteString("Write String must be a byte[]\n")
+	_, err = file.Write(b)
+	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println(personb) // to Structure
+	file.Close()
 }
