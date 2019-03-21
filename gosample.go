@@ -28,6 +28,7 @@ func Write() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer file.Close()
 
 	b, err := json.Marshal(person)
 	if err != nil {
@@ -38,6 +39,4 @@ func Write() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	file.Close()
 }
