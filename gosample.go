@@ -3,6 +3,7 @@ package gosample
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 )
@@ -40,19 +41,13 @@ func Write() {
 }
 
 func Read() {
-	file, err := os.Open("./person.json")
+	file, _ := os.Open("./file.txt")
+	message, err := ioutil.ReadAll(file)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
 
-	var person Person
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&person)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println(person)
+	fmt.Println(message)
 	fmt.Print(string("\n"))
 }
