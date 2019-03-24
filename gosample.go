@@ -25,36 +25,34 @@ func Write() {
 		Address: "",
 	}
 
-	file, err := os.Create("./file.txt")
+	file, err := os.Create("./person.json")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
 
-	b, err := json.Marshal(person)
-	if err != nil {
-		log.Fatal(err)
-	}
-	_, err = file.WriteString("Write String must be a byte[]\n")
-	_, err = file.Write(b)
+	encoder := json.NewEncoder(file)
+
+	err = encoder.Encode(person)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func Read() {
-	file, err := os.Open("./file.txt")
+	file, err := os.Open("./person.json")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
 
-	message := make([]byte, 12)
-	_, err = file.Read(message)
+	var person Person
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&person)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Print(string(message))
+	fmt.Println(person)
 	fmt.Print(string("\n"))
 }
