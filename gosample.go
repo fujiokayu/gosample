@@ -1,11 +1,9 @@
 package gosample
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 )
 
 type Person struct {
@@ -18,36 +16,20 @@ type Person struct {
 }
 
 func Write() {
-	person := &Person{
-		ID:      1,
-		Name:    "Writer",
-		Email:   "gopher@example.org",
-		Age:     5,
-		Address: "",
-	}
-
-	file, err := os.Create("./person.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	encoder := json.NewEncoder(file)
-
-	err = encoder.Encode(person)
+	message := []byte("hello world\n")
+	// 3rd arg is permission
+	err := ioutil.WriteFile("./file.txt", message, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func Read() {
-	file, _ := os.Open("./file.txt")
-	message, err := ioutil.ReadAll(file)
+	message, err := ioutil.ReadFile("./file.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
 
-	fmt.Println(message)
+	fmt.Print(string(message))
 	fmt.Print(string("\n"))
 }
