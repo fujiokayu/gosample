@@ -2,34 +2,28 @@ package gosample
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
+	"net/http"
+	"time"
 )
 
-type Person struct {
-	ID      int
-	Name    string
-	Email   string
-	Age     int
-	Address string
-	memo    string
-}
-
-func Write() {
-	message := []byte("hello world\n")
-	// 3rd arg is permission
-	err := ioutil.WriteFile("./file.txt", message, 0666)
-	if err != nil {
-		log.Fatal(err)
+func Gets() {
+	urls := []string{
+		"http://example.com",
+		"http://example.net",
+		"http://example.org",
 	}
-}
-
-func Read() {
-	message, err := ioutil.ReadFile("./file.txt")
-	if err != nil {
-		log.Fatal(err)
+	for _, url := range urls {
+		go func(url string) {
+			res, err := http.Get(url)
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer res.Body.Close()
+			fmt.Println(url, res.Status)
+		}(url)
 	}
-
-	fmt.Print(string(message))
-	fmt.Print(string("\n"))
+	// wait Goroutine
+	time.Sleep(time.Second)
+	fmt.Print("succeeded")
 }
