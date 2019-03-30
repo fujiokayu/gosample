@@ -4,16 +4,19 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
+	"sync"
 )
 
 func Gets() {
+	wait := new(sync.WaitGroup)
 	urls := []string{
 		"http://example.com",
 		"http://example.net",
 		"http://example.org",
 	}
 	for _, url := range urls {
+		// add waitGroup
+		wait.Add(1)
 		go func(url string) {
 			res, err := http.Get(url)
 			if err != nil {
@@ -21,9 +24,9 @@ func Gets() {
 			}
 			defer res.Body.Close()
 			fmt.Println(url, res.Status)
+			// delete waitGroup
+			wait.Done()
 		}(url)
 	}
-	// wait Goroutine
-	time.Sleep(time.Second)
-	fmt.Print("succeeded")
+	wait.Wait()
 }
