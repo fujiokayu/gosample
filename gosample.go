@@ -4,29 +4,27 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"sync"
 )
 
 func Gets() {
-	wait := new(sync.WaitGroup)
 	urls := []string{
 		"http://example.com",
 		"http://example.net",
 		"http://example.org",
 	}
+	statusChan := make(chan string)
 	for _, url := range urls {
-		// add waitGroup
-		wait.Add(1)
+		// 取得処理をゴルーチンで実行する
 		go func(url string) {
 			res, err := http.Get(url)
 			if err != nil {
 				log.Fatal(err)
 			}
 			defer res.Body.Close()
-			fmt.Println(url, res.Status)
-			// delete waitGroup
-			wait.Done()
+			statusChan <- res.Status
 		}(url)
 	}
-	wait.Wait()
+	for i := 0; i < len(urls); i++ {
+		fmt.Println(<-statusChan)
+	}
 }
